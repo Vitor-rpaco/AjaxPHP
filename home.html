@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Home</title>
+</head>
+<body>
+
+	<form>
+
+		<label>Digite seu estado: </label>
+		<br><br>
+		<input type="text" name="estado" onchange="recebeArray(this.value)" />
+		<br><br>
+	
+	</form>
+
+	<select id="campoResposta" value= 0 onchange="recebeArray(this.value)"></select>
+</body>
+
+<script>
+	
+	function recebeArray(str) {
+		
+		if(str.length > 0){
+
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200){
+
+					limpaSelect();
+					var campoResposta = document.getElementById('campoResposta');
+
+					var result = JSON.parse(this.responseText);
+					console.log(result);
+					
+					for(var i = 0; i < result.estado.length; i++){
+
+						var abrOption = document.createElement("option");
+						abrOption.value = result.estado[i];
+						abrOption.innerHTML = result.estado[i];
+						campoResposta.appendChild(abrOption);
+
+					}
+				}
+			}
+
+			xmlhttp.open("GET", "http://localhost/AjaxTrabalho/cidadesPHP.php?estado="+str, true);
+			xmlhttp.send();
+		}
+
+
+	}
+
+	function limpaSelect(){
+		var campoResposta = document.getElementById('campoResposta');
+
+		campoResposta.parentNode.removeChild(campoResposta);
+
+		var tag = document.createElement("select");
+		tag.setAttribute("id", "campoResposta");
+		document.body.appendChild(tag);
+	}
+</script>
+</html>
